@@ -1,97 +1,93 @@
+
+
+---
+
 # 📝 Laporan Tugas Akhir
 
 **Mata Kuliah**: Sistem Operasi
 **Semester**: Genap / Tahun Ajaran 2024–2025
-**Nama**: `<Nama Lengkap>`
-**NIM**: `<Nomor Induk Mahasiswa>`
+**Nama**: `Muhammad Nuur Fathan`
+**NIM**: `240202840`
 **Modul yang Dikerjakan**:
-`(Contoh: Modul 1 – System Call dan Instrumentasi Kernel)`
+**Modul 2 – Penjadwalan CPU Lanjutan (Priority Scheduling Non-Preemptive)**
 
 ---
 
 ## 📌 Deskripsi Singkat Tugas
 
-Tuliskan deskripsi singkat dari modul yang Anda kerjakan. Misalnya:
+Modul ini bertujuan untuk memodifikasi algoritma penjadwalan proses di kernel `xv6-public` dari **Round Robin** menjadi **Non-Preemptive Priority Scheduling**. Penjadwalan baru ini memilih proses RUNNABLE dengan prioritas **tertinggi** (nilai angka prioritas **terkecil**) dan menjalankannya sampai selesai atau berubah status. Sistem ini **tidak mendukung preemption**, sehingga setiap proses tetap dijalankan hingga selesai secara eksplisit.
 
-* **Modul 1 – System Call dan Instrumentasi Kernel**:
-  Menambahkan dua system call baru, yaitu `getpinfo()` untuk melihat proses yang aktif dan `getReadCount()` untuk menghitung jumlah pemanggilan `read()` sejak boot.
 ---
 
 ## 🛠️ Rincian Implementasi
 
-Tuliskan secara ringkas namun jelas apa yang Anda lakukan:
+* Menambahkan field `priority` pada struktur `proc` di file `proc.h`
+* Inisialisasi nilai default `priority` (60) di `allocproc()` pada `proc.c`
+* Menambahkan syscall baru `set_priority(int)` untuk mengatur prioritas proses:
 
-### Contoh untuk Modul 1:
+  * Mendefinisikan syscall di `syscall.h`, `user.h`, dan `usys.S`
+  * Registrasi syscall di `syscall.c` dan implementasi di `sysproc.c`
+* Memodifikasi fungsi `scheduler()` di `proc.c`:
 
-* Menambahkan dua system call baru di file `sysproc.c` dan `syscall.c`
-* Mengedit `user.h`, `usys.S`, dan `syscall.h` untuk mendaftarkan syscall
-* Menambahkan struktur `struct pinfo` di `proc.h`
-* Menambahkan counter `readcount` di kernel
-* Membuat dua program uji: `ptest.c` dan `rtest.c`
+  * Menyeleksi proses RUNNABLE dengan prioritas tertinggi
+  * Menjalankan proses tersebut tanpa preemption hingga selesai atau blocking
+* Menambahkan program uji `ptest.c` yang menguji eksekusi dua child dengan prioritas berbeda
+* Memodifikasi `Makefile` untuk memasukkan `ptest` ke dalam daftar user program
+
 ---
 
 ## ✅ Uji Fungsionalitas
 
-Tuliskan program uji apa saja yang Anda gunakan, misalnya:
+Pengujian dilakukan menggunakan program `ptest`:
 
-* `ptest`: untuk menguji `getpinfo()`
-* `rtest`: untuk menguji `getReadCount()`
-* `cowtest`: untuk menguji fork dengan Copy-on-Write
-* `shmtest`: untuk menguji `shmget()` dan `shmrelease()`
-* `chmodtest`: untuk memastikan file `read-only` tidak bisa ditulis
-* `audit`: untuk melihat isi log system call (jika dijalankan oleh PID 1)
+* `ptest` membuat dua proses child:
+
+  * `Child 1` dengan prioritas rendah (`90`)
+  * `Child 2` dengan prioritas tinggi (`10`)
+* Hasil pengujian menunjukkan bahwa `Child 2` selesai lebih dulu karena memiliki prioritas lebih tinggi
 
 ---
 
 ## 📷 Hasil Uji
 
-Lampirkan hasil uji berupa screenshot atau output terminal. Contoh:
-
-### 📍 Contoh Output `cowtest`:
+### 📍 Contoh Output `ptest`:
 
 ```
-Child sees: Y
-Parent sees: X
+Child 2 selesai
+Child 1 selesai
+Parent selesai
 ```
 
-### 📍 Contoh Output `shmtest`:
+Hasil menunjukkan bahwa proses dengan prioritas lebih tinggi (nilai lebih kecil) dijalankan lebih dulu.
+
 
 ```
-Child reads: A
-Parent reads: B
-```
+<img width="951" height="1032" alt="image" src="https://github.com/user-attachments/assets/d8bd6685-8538-45b5-81d8-4cbe5537317e" />
 
-### 📍 Contoh Output `chmodtest`:
-
-```
-Write blocked as expected
-```
-
-Jika ada screenshot:
-
-```
-![hasil cowtest](./screenshots/cowtest_output.png)
 ```
 
 ---
 
 ## ⚠️ Kendala yang Dihadapi
 
-Tuliskan kendala (jika ada), misalnya:
+* Terjadi error `‘proc’ undeclared` dan `‘cpu’ undeclared` dalam fungsi `scheduler()` karena:
 
-* Salah implementasi `page fault` menyebabkan panic
-* Salah memetakan alamat shared memory ke USERTOP
-* Proses biasa bisa akses audit log (belum ada validasi PID)
+  * `proc` seharusnya dikelola melalui `cpu->proc`
+  * `cpu` perlu diinisialisasi melalui `mycpu()`
+* Solusi:
+
+  * Menambahkan `struct cpu *cpu = mycpu();` di awal fungsi `scheduler`
+  * Menggunakan `cpu->proc = p;` saat proses dipilih untuk dijalankan
 
 ---
 
 ## 📚 Referensi
 
-Tuliskan sumber referensi yang Anda gunakan, misalnya:
-
 * Buku xv6 MIT: [https://pdos.csail.mit.edu/6.828/2018/xv6/book-rev11.pdf](https://pdos.csail.mit.edu/6.828/2018/xv6/book-rev11.pdf)
 * Repositori xv6-public: [https://github.com/mit-pdos/xv6-public](https://github.com/mit-pdos/xv6-public)
-* Stack Overflow, GitHub Issues, diskusi praktikum
+* Diskusi praktikum Sistem Operasi
+* Stack Overflow & GitHub Issues terkait context switching dan priority scheduling di xv6
 
 ---
 
+Jika kamu butuh versi *PDF-ready* atau format `.docx`, tinggal bilang saja. Mau saya bantu ubah jadi dokumen siap cetak?

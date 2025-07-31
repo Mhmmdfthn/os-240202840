@@ -88,6 +88,6 @@ Hasil menunjukkan bahwa proses dengan prioritas lebih tinggi (nilai lebih kecil)
 * Repositori xv6-public: [https://github.com/mit-pdos/xv6-public](https://github.com/mit-pdos/xv6-public)
 * Diskusi praktikum Sistem Operasi
 * Stack Overflow & GitHub Issues terkait context switching dan priority scheduling di xv6
-
+* Chat GPT untuk Problem Solving
 ---
 

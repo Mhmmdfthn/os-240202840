@@ -6,8 +6,10 @@ Berikut ini contoh **Laporan Tugas Akhir** yang udah kamu minta, dengan format s
 
 **Mata Kuliah**: Sistem Operasi
 **Semester**: Genap / Tahun Ajaran 2024–2025
-**Nama**: `<Muhammad Nuur Fathan>`
-**NIM**: `<240202840>`
+
+**Nama**   : `Muhammad Nuur Fathan`
+**NIM**    : `240202840`
+
 **Modul yang Dikerjakan**:
 `Modul 1 – System Call dan Instrumentasi Kernel`
 

@@ -61,10 +61,11 @@ Parent selesai
 Hasil menunjukkan bahwa proses dengan prioritas lebih tinggi (nilai lebih kecil) dijalankan lebih dulu.
 
 
-```
-<img width="951" height="1032" alt="image" src="https://github.com/user-attachments/assets/d8bd6685-8538-45b5-81d8-4cbe5537317e" />
 
-```
+[<img width="951" height="1032" alt="Screenshot 2025-07-30 195337" src="https://github.com/user-attachments/assets/9d1dc8f1-f73e-4581-bd54-28cdd669b89d" />](https://github.com/Mhmmdfthn/os-240202840/blob/main/tugas/TugasAkhir_os_202402/C.%20Hasil/Modul%202/screenshot/Screenshot%202025-07-30%20195337.png?raw=true)
+
+
+
 
 ---
 
@@ -90,4 +91,3 @@ Hasil menunjukkan bahwa proses dengan prioritas lebih tinggi (nilai lebih kecil)
 
 ---
 
-Jika kamu butuh versi *PDF-ready* atau format `.docx`, tinggal bilang saja. Mau saya bantu ubah jadi dokumen siap cetak?

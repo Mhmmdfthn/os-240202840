@@ -1,3 +1,7 @@
+Berikut ini contoh **Laporan Tugas Akhir** yang udah kamu minta, dengan format sesuai template. Kamu tinggal ganti `<Nama Lengkap>` dan `<Nomor Induk Mahasiswa>` aja.
+
+---
+
 # 📝 Laporan Tugas Akhir
 
 **Mata Kuliah**: Sistem Operasi
@@ -5,93 +9,82 @@
 **Nama**: `<Nama Lengkap>`
 **NIM**: `<Nomor Induk Mahasiswa>`
 **Modul yang Dikerjakan**:
-`(Contoh: Modul 1 – System Call dan Instrumentasi Kernel)`
+`Modul 1 – System Call dan Instrumentasi Kernel`
 
 ---
 
 ## 📌 Deskripsi Singkat Tugas
 
-Tuliskan deskripsi singkat dari modul yang Anda kerjakan. Misalnya:
-
 * **Modul 1 – System Call dan Instrumentasi Kernel**:
-  Menambahkan dua system call baru, yaitu `getpinfo()` untuk melihat proses yang aktif dan `getReadCount()` untuk menghitung jumlah pemanggilan `read()` sejak boot.
+  Tugas ini bertujuan untuk menambahkan dua buah system call baru dalam kernel xv6-public, yaitu:
+
+  * `getpinfo()`: Menampilkan informasi proses-proses aktif (PID, ukuran memori, nama proses)
+  * `getReadCount()`: Mengembalikan jumlah pemanggilan system call `read()` sejak sistem boot
+
 ---
 
 ## 🛠️ Rincian Implementasi
 
-Tuliskan secara ringkas namun jelas apa yang Anda lakukan:
+* Menambahkan `struct pinfo` di `proc.h` sebagai wadah info proses
+* Membuat variabel global `readcount` di `sysproc.c` untuk menghitung pemanggilan `read()`
+* Menambahkan nomor syscall baru di `syscall.h`
+* Menambahkan deklarasi syscall di `user.h` dan `usys.S`
+* Menambahkan entri syscall baru ke tabel di `syscall.c`
+* Implementasi syscall `sys_getpinfo()` dan `sys_getreadcount()` di `sysproc.c`
+* Menambahkan `readcount++` di fungsi `sys_read()` dalam `sysfile.c`
+* Membuat program uji `ptest.c` untuk `getpinfo()` dan `rtest.c` untuk `getreadcount()`
+* Menambahkan `_ptest` dan `_rtest` ke dalam `Makefile`
 
-### Contoh untuk Modul 1:
-
-* Menambahkan dua system call baru di file `sysproc.c` dan `syscall.c`
-* Mengedit `user.h`, `usys.S`, dan `syscall.h` untuk mendaftarkan syscall
-* Menambahkan struktur `struct pinfo` di `proc.h`
-* Menambahkan counter `readcount` di kernel
-* Membuat dua program uji: `ptest.c` dan `rtest.c`
 ---
 
 ## ✅ Uji Fungsionalitas
 
-Tuliskan program uji apa saja yang Anda gunakan, misalnya:
-
-* `ptest`: untuk menguji `getpinfo()`
-* `rtest`: untuk menguji `getReadCount()`
-* `cowtest`: untuk menguji fork dengan Copy-on-Write
-* `shmtest`: untuk menguji `shmget()` dan `shmrelease()`
-* `chmodtest`: untuk memastikan file `read-only` tidak bisa ditulis
-* `audit`: untuk melihat isi log system call (jika dijalankan oleh PID 1)
+* `ptest`: untuk menguji hasil dari system call `getpinfo()`
+* `rtest`: untuk menguji hasil dari system call `getReadCount()`
 
 ---
 
 ## 📷 Hasil Uji
 
-Lampirkan hasil uji berupa screenshot atau output terminal. Contoh:
-
-### 📍 Contoh Output `cowtest`:
+### 📍 Output `rtest`:
 
 ```
-Child sees: Y
-Parent sees: X
+Read Count Sebelum: 12
+hello
+Read Count Setelah: 13
 ```
 
-### 📍 Contoh Output `shmtest`:
+### 📍 Output `ptest`:
 
 ```
-Child reads: A
-Parent reads: B
-```
-
-### 📍 Contoh Output `chmodtest`:
-
-```
-Write blocked as expected
-```
-
-Jika ada screenshot:
-
-```
-![hasil cowtest](./screenshots/cowtest_output.png)
+PID     MEM     NAME
+1       1228    init
+2       1638    sh
+3       1228    ptest
 ```
 
 ---
 
 ## ⚠️ Kendala yang Dihadapi
 
-Tuliskan kendala (jika ada), misalnya:
-
-* Salah implementasi `page fault` menyebabkan panic
-* Salah memetakan alamat shared memory ke USERTOP
-* Proses biasa bisa akses audit log (belum ada validasi PID)
+* Variabel global `readcount` tidak dikenali di `sysfile.c` → Solusi: Menambahkan `extern int readcount;`
+* Error redefinition pada `proc.h` karena file `proc.h` di-include dua kali → Solusi: Menambahkan header guard `#ifndef PROC_H` … `#endif`
+* Kesalahan urutan pemanggilan `argint()` dan `argptr()` dalam `sys_read()`
+* Salah memahami struktur `ptable` dalam `sys_getpinfo()` → harusnya mengakses `proc[NPROC]`, bukan `ptable.proc`
 
 ---
 
 ## 📚 Referensi
 
-Tuliskan sumber referensi yang Anda gunakan, misalnya:
-
 * Buku xv6 MIT: [https://pdos.csail.mit.edu/6.828/2018/xv6/book-rev11.pdf](https://pdos.csail.mit.edu/6.828/2018/xv6/book-rev11.pdf)
 * Repositori xv6-public: [https://github.com/mit-pdos/xv6-public](https://github.com/mit-pdos/xv6-public)
-* Stack Overflow, GitHub Issues, diskusi praktikum
+* Diskusi praktikum dan dokumentasi kernel xv6
+* Stack Overflow dan GitHub Issues saat debugging
 
 ---
 
+Kalau kamu udah punya screenshot hasil uji, tinggal tambahin aja formatnya gini:
+
+```markdown
+![hasil rtest](./screenshots/rtest.png)
+```

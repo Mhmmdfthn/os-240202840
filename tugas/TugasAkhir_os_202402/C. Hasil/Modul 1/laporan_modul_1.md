@@ -66,9 +66,10 @@ PID     MEM     NAME
 ```
 
 ---
-```markdown
-![hasil rtest](./screenshots/rtest.png)
-```
+### Hasil uji dalam bentuk screenshot terminal:
+
+<img width="960" height="1032" alt="image" src="https://github.com/user-attachments/assets/61353f4c-b05b-4c1f-8a40-9396c21605e2" />
+
 
 ## ⚠️ Kendala yang Dihadapi
 

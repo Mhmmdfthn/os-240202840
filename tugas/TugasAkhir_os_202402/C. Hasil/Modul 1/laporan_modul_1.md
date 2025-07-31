@@ -64,6 +64,9 @@ PID     MEM     NAME
 ```
 
 ---
+```markdown
+![hasil rtest](./screenshots/rtest.png)
+```
 
 ## ⚠️ Kendala yang Dihadapi
 
@@ -83,8 +86,3 @@ PID     MEM     NAME
 
 ---
 
-Kalau kamu udah punya screenshot hasil uji, tinggal tambahin aja formatnya gini:
-
-```markdown
-![hasil rtest](./screenshots/rtest.png)
-```

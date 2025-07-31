@@ -86,6 +86,6 @@ PID     MEM     NAME
 * Repositori xv6-public: [https://github.com/mit-pdos/xv6-public](https://github.com/mit-pdos/xv6-public)
 * Diskusi praktikum dan dokumentasi kernel xv6
 * Stack Overflow dan GitHub Issues saat debugging
-
+* Chat GPT untuk Problem Solving
 ---
 

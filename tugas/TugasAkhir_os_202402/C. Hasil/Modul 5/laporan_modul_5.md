@@ -53,10 +53,8 @@
 
 Jika hasil uji dalam bentuk screenshot terminal:
 
-```
 <img width="960" height="1032" alt="image" src="https://github.com/user-attachments/assets/1c161b31-e988-429a-9c45-d23aac7fe342" />
 
-```
 
 ---
 

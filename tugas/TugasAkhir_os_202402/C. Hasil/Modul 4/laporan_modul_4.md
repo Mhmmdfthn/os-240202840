@@ -1,97 +1,90 @@
+
+---
+
 # 📝 Laporan Tugas Akhir
 
 **Mata Kuliah**: Sistem Operasi
 **Semester**: Genap / Tahun Ajaran 2024–2025
-**Nama**: `<Nama Lengkap>`
-**NIM**: `<Nomor Induk Mahasiswa>`
+**Nama**: `Muhammad nuur Fathan`
+**NIM**: `240202840`
 **Modul yang Dikerjakan**:
-`(Contoh: Modul 1 – System Call dan Instrumentasi Kernel)`
+`Modul 4 – Subsistem Kernel Alternatif (xv6-public)`
 
 ---
 
 ## 📌 Deskripsi Singkat Tugas
 
-Tuliskan deskripsi singkat dari modul yang Anda kerjakan. Misalnya:
+* **Modul 4 – Subsistem Kernel Alternatif**:
+  Modul ini berfokus pada pengembangan dua fitur kernel baru pada xv6, yaitu:
 
-* **Modul 1 – System Call dan Instrumentasi Kernel**:
-  Menambahkan dua system call baru, yaitu `getpinfo()` untuk melihat proses yang aktif dan `getReadCount()` untuk menghitung jumlah pemanggilan `read()` sejak boot.
+  * Menambahkan system call baru `chmod(path, mode)` untuk mengubah mode akses file menjadi read-only atau read-write.
+  * Menambahkan driver pseudo-device `/dev/random` yang menghasilkan data acak saat dibaca.
+
 ---
 
 ## 🛠️ Rincian Implementasi
 
-Tuliskan secara ringkas namun jelas apa yang Anda lakukan:
+### Untuk System Call `chmod()`:
 
-### Contoh untuk Modul 1:
+* Menambahkan field `short mode;` di `struct inode` (hanya in-memory).
+* Mengedit `syscall.h`, `user.h`, `usys.S`, dan `syscall.c` untuk mendaftarkan syscall `chmod`.
+* Implementasi fungsi `sys_chmod` di `sysfile.c` untuk mengatur `ip->mode`.
+* Menambahkan pengecekan `f->ip->mode == 1` pada `filewrite()` di `file.c` untuk mencegah penulisan ke file read-only.
+* Membuat program uji `chmodtest.c`.
 
-* Menambahkan dua system call baru di file `sysproc.c` dan `syscall.c`
-* Mengedit `user.h`, `usys.S`, dan `syscall.h` untuk mendaftarkan syscall
-* Menambahkan struktur `struct pinfo` di `proc.h`
-* Menambahkan counter `readcount` di kernel
-* Membuat dua program uji: `ptest.c` dan `rtest.c`
+### Untuk Driver `/dev/random`:
+
+* Menambahkan file baru `random.c` berisi fungsi `randomread()` yang menghasilkan byte acak.
+* Mendaftarkan `randomread` ke `devsw[3]` secara langsung di `file.c`.
+* Menambahkan perintah `mknod("/dev/random", 1, 3);` di `init.c` agar device node dibuat saat booting.
+* Membuat program uji `randomtest.c`.
+* Menambahkan `random.o` ke `Makefile` agar ikut dikompilasi ke kernel.
+
 ---
 
 ## ✅ Uji Fungsionalitas
 
-Tuliskan program uji apa saja yang Anda gunakan, misalnya:
+Program uji yang digunakan:
 
-* `ptest`: untuk menguji `getpinfo()`
-* `rtest`: untuk menguji `getReadCount()`
-* `cowtest`: untuk menguji fork dengan Copy-on-Write
-* `shmtest`: untuk menguji `shmget()` dan `shmrelease()`
-* `chmodtest`: untuk memastikan file `read-only` tidak bisa ditulis
-* `audit`: untuk melihat isi log system call (jika dijalankan oleh PID 1)
+* `chmodtest`: menguji apakah file dengan mode read-only benar-benar tidak bisa ditulis.
+* `randomtest`: menguji apakah pembacaan dari `/dev/random` menghasilkan byte acak.
 
 ---
 
 ## 📷 Hasil Uji
 
-Lampirkan hasil uji berupa screenshot atau output terminal. Contoh:
-
-### 📍 Contoh Output `cowtest`:
-
-```
-Child sees: Y
-Parent sees: X
-```
-
-### 📍 Contoh Output `shmtest`:
-
-```
-Child reads: A
-Parent reads: B
-```
-
-### 📍 Contoh Output `chmodtest`:
+### 📍  Output `chmodtest`:
 
 ```
 Write blocked as expected
 ```
 
-Jika ada screenshot:
+### 📍  Output `randomtest`:
 
 ```
-![hasil cowtest](./screenshots/cowtest_output.png)
+254 183 124 93 42 115 136 121
 ```
+
+### 📍 Screenshot xv6 shell:
+
+<img width="948" height="772" alt="image" src="https://github.com/user-attachments/assets/3d4badb9-be23-4294-bc5e-a5babd13e181" />
+
 
 ---
 
 ## ⚠️ Kendala yang Dihadapi
 
-Tuliskan kendala (jika ada), misalnya:
-
-* Salah implementasi `page fault` menyebabkan panic
-* Salah memetakan alamat shared memory ke USERTOP
-* Proses biasa bisa akses audit log (belum ada validasi PID)
+* Awalnya menambahkan `mode` ke `struct dinode` menyebabkan `mkfs` gagal (`assert (BSIZE % sizeof(dinode)) == 0`).
+* Salah menulis inisialisasi `devsw[3]` menyebabkan `randomtest` gagal `cannot open /dev/random`.
+* Fungsi `randomread` tidak dipanggil karena `devsw[3]` hanya diisi di `fileinit()`, padahal perlu diinisialisasi global.
 
 ---
 
 ## 📚 Referensi
 
-Tuliskan sumber referensi yang Anda gunakan, misalnya:
-
 * Buku xv6 MIT: [https://pdos.csail.mit.edu/6.828/2018/xv6/book-rev11.pdf](https://pdos.csail.mit.edu/6.828/2018/xv6/book-rev11.pdf)
 * Repositori xv6-public: [https://github.com/mit-pdos/xv6-public](https://github.com/mit-pdos/xv6-public)
-* Stack Overflow, GitHub Issues, diskusi praktikum
+* Diskusi praktikum dan debugging bersama teman 
+* ChatGPT & Stack Overflow untuk tracing error kernel dan struktur file system
 
 ---
-
